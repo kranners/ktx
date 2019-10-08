@@ -60,6 +60,40 @@ if [[ $delete = true ]]; then
    exit
 fi
 
+# read in single character input
+function charin() {
+    minor=""
+    major=""
+#   essentially when you enter in an arrow key youre actually entering in a string of 3
+    read -rsn1 ui
+    case "$ui" in
+        $'\x1b')    # Handle ESC sequence.
+            read -rsn1  tmp 
+            if [[ "$tmp" == "[" ]]; then
+                read -rsn1  tmp 
+                case "$tmp" in
+                    "A") major="up";;
+                    "B") major="down";;
+                    "C") major="right";;
+                    "D") major="left";;
+                esac
+            fi
+            # Flush "stdin" with 1  sec timeout.
+            read -rsn5 -t 0
+            ;;
+        # Other one byte (char) cases. Here only quit.
+        "") minor="enter";;
+        [Jj]) minor="down";;
+        [Kk]) minor="up";;
+    esac
+
+    if [[ $minor == "" ]]; then
+        char="$major"
+    else
+        char="$minor"
+    fi
+}
+
 function movepos() {
     echo ""
     ((position+=$1))
@@ -69,6 +103,7 @@ function movepos() {
 function choose() {
     chosen="${dirs[$1]}"
     eval 'export KUBECONFIG=$filepath$chosen/config'
+    echo Exported to $(kubectl config view -o template --template='{{ index . "current-context" }}')
     if [[ "$token" = true ]]; then 
         if [[ -f "$filepath$chosen/token" ]]; then 
             pbcopy < "$filepath$chosen/token"
@@ -114,12 +149,12 @@ if [[ "$do_main" = true ]]; then
             fi
         done
 
-        read -n 1 key
+        charin
 
-        case $key in
-            [Jj]) movepos 1;;
-            [Kk]) movepos -1;;
-            "") choose $position;;
+        case $char in
+            "up") movepos -1;;
+            "down") movepos 1;;
+            "enter") choose $position;;
         esac
     done
 fi
