@@ -9,6 +9,7 @@ I recommend you add an alias to your ~/.bashrc ( or ~/.zshrc ) to run this scrip
 - -t Copy a token if one is present
 - -D <name> delete a listing
 - -a Add new kubeconfig to list!
+
 The following flags are related to **add mode only**
 - -r raw input instead of file location
 - -f Relative location of kubeconfig file
