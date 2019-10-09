@@ -39,26 +39,28 @@ while getopts 'hrtdaD:f:T:n:' opt; do
         d) dashboard=true ;;
         r) raw_file=true ;;
         a) add_new=true && do_main=false ;;
-        f) input_file="${OPTARG}" ;;
-        T) input_token="${OPTARG}" ;;
-        n) input_name="${OPTARG}" ;;
-        D) input_file="${OPTARG}" && delete=true && do_main=false ;;
+        f) input_file="${OPTARG}" && file_force=true ;;
+        T) input_token="${OPTARG}" && token_force=true ;;
+        n) input_name="${OPTARG}" && name_force=true ;;
+        D) input_name="${OPTARG}" && delete=true && do_main=false ;;
         h) print_usage && exit ;;
         *) print_usage && exit ;;
     esac
 done
 
+function DeleteListing() {
 # very short stuff, just deletes the given file
-if [[ $delete = true ]]; then
-   [[ -z $input_file ]] && echo "No listing given!" && exit
-   if [[ ! -d $filepath$input_file ]]; then 
-       echo "No listing exists with the name $input_file"
-   else
-       rm -r $filepath$input_file
-       echo "Deleted $filepath$input_file"
-   fi
-   exit
-fi
+    if [[ $delete = true ]]; then
+       [[ -z $input_name ]] && echo "No listing given!" && exit
+       if [[ ! -d $filepath$input_name ]]; then 
+           echo "No listing exists with the name $input_name"
+       else
+           rm -r $filepath$input_name
+           echo "Deleted $filepath$input_name"
+       fi
+       exit
+    fi
+}
 
 # read in single character input
 function charin() {
@@ -124,7 +126,7 @@ function choose() {
 }
 
 # main function!
-if [[ "$do_main" = true ]]; then
+function SelectListing() {
     if [[ "$dirs" = "" ]]; then
         echo "Looks like you have no kubeconfigs added, see <script> -h to add one"
         exit
@@ -157,9 +159,9 @@ if [[ "$do_main" = true ]]; then
             "enter") choose $position;;
         esac
     done
-fi
+}
 
-if [[ "$add_new" = true ]]; then
+function AddListing() { 
     if [[ -z "$input_name" ||  -z "$input_file" ]]; then 
         echo "Ensure --config (optionally --token) and --name are all set!"
     else 
@@ -183,4 +185,4 @@ if [[ "$add_new" = true ]]; then
             echo $input_file > "$filepath$input_name/config"
         fi
     fi
-fi
+}
