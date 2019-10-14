@@ -3,15 +3,18 @@
 Instead of `EXPORT`ing your kubeconfigs every goddamn time, use a script instead!
 I recommend you add an alias to your ~/.bashrc ( or ~/.zshrc ) to run this script.
 
-## Flags
-- -h Show these flags
-- -d Start dashboard instead of shell
-- -t Copy a token if one is present
-- -D <name> delete a listing
-- -a Add new kubeconfig to list!
-
-The following flags are related to **add mode only**
-- -r raw input instead of file location
-- -f Relative location of kubeconfig file
-- -T Relative location of token file (just the token! no 'token:')
-- -n Name of entry in list
+Usage: 
+ktx [add | del | sel] [<filename>] [--token <plain token file>] [--name <context-name>]
+Running with no arguments will open the selector menu
+add - adds a listing
+    eg. ktx add <filename>
+        ktx add <filename> --token <tokenfile> 
+        ktx add <filename> --token <tokenfile> --name <context-name>
+del - deletes a listing
+    eg. ktx del <context-name>
+sel - select a listing
+    eg. ktx sel <context-name>
+tldr - prints the TLDR 
+    eg. ktx tldr
+help - prints this 
+        eg. ktx help
