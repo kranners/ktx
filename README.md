@@ -5,7 +5,10 @@ I recommend you add an alias to your ~/.bashrc ( or ~/.zshrc ) to run this scrip
 
 Usage:  
 ktx [add | del | sel] [filename] [--name context-name]  
+
 Running with no arguments will open the selector menu  
+```ktx dash``` will attempt to open a dashboard after exporting.
+
 - **add** - adds a listing  
     - ```ktx add <filename>```  
     - ```ktx add <filename> --name <context-name>```  
