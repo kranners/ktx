@@ -16,12 +16,23 @@ url=http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:
 
 print_usage() {
 cat << EOF
+Usage:  
+ktx [add | del | sel] [filename] [--name context-name]  
+
+Running with no arguments will open the selector menu  
+ktx dash will attempt to open a dashboard after exporting.
+
+add - adds a listing  
+    ktx add <filename>  
+    ktx add <filename> --name <context-name>  
+del - deletes a listing  
+    ktx del <context-name>  
+tldr - prints the TLDR   
+    ktx tldr  
 usage: ktx [add | del | sel] [<filename>] [--token <plain token file>] [--name <context-name>]
 Running with no arguments will open the selector menu
 add - adds a listing
     eg. ktx add <filename>
-        ktx add <filename> --token <tokenfile> 
-        ktx add <filename> --token <tokenfile> --name <context-name>
 del - deletes a listing
     eg. ktx del <context-name>
 sel - select a listing
@@ -36,9 +47,9 @@ EOF
 
 print_tldr() {
 cat << EOF
-    Add a listing: ktx add <filename> --token <token file> --name <context-name>
+    Add a listing: ktx add <filename>
     Delete a listing: ktx del <context-name>
-    Select a listing (no arguments): ktx OR ktx select <context-name>
+    Select a listing (no arguments): ktx OR ktx dash 
 EOF
     exit
 }
@@ -94,7 +105,6 @@ ReadInFile() {
 
         if [[ $line =~ "token:" ]]; then
             input_token=$( echo $line | awk '{print $2}' )
-            echo "Found token"
         fi
     done < "$1" # read in the file by lines
     eval 'export KUBECONFIG=$old_config'
@@ -207,8 +217,8 @@ SelectListing() {
 AddListing() { 
     ReadInFile $input_file
     Verify
-    [[ -z "$input_token" ]] && echo "$input_token" >> $filepath$input_name/token
     mkdir -p $filepath$input_name
+    [[ ! -z "$input_token" ]] && echo "$input_token" >> $filepath$input_name/token && echo "Found and wrote token."
     cp $input_file $filepath$input_name/config
     echo "Added $input_name"
 }
