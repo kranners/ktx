@@ -58,6 +58,7 @@ for arg in "$@"; do
             "-t") grab="token" ;;
             "tldr") print_tldr ;;
             "help") print_usage ;;
+            "dash") dashboard=true && token=true ;;
         esac    
     else
         case "$grab" in
@@ -178,9 +179,6 @@ SelectListing() {
     while true; do
         clear
         echo "\033[31;1mKubeconfig Picker\033[0m"
-        [[ "$token" = true ]] && echo "Will try to copy token!"
-        [[ "$dashboard" = true ]] && echo "Will try to open dashboard!"
-
         len=${#dirs[@]}
         ((lensub=len-1))
 
