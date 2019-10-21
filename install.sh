@@ -10,7 +10,7 @@ else
     # write this to your bashrc / zshrc
     # I know this can be done with cat EOF! It just doesnt work for very literal things like this
     echo "ktx() {" >> $rcfile
-    echo "    sh $PWD/ktx.sh" >> $rcfile
+    echo "    $PWD/ktx.sh \$@" >> $rcfile
     echo "    conf=\$(cat $HOME/.kubeconfigs/current)" >> $rcfile
     echo "    export KUBECONFIG="\$conf"" >> $rcfile
     echo "}" >> $rcfile

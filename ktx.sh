@@ -56,6 +56,8 @@ EOF
 
 mode="sel"
 grab=false
+dashboard=false
+token=false
 
 # check flags and args
 for arg in "$@"; do
@@ -63,6 +65,7 @@ for arg in "$@"; do
         case "$arg" in
             "add") mode="add" && grab="file" ;;
             "del") mode="del" && grab="file" ;;
+            "sel") mode="sel" ;;
             "--name") grab="name" ;;
             "-n") grab="name" ;;
             "--token") grab="token" ;;
@@ -168,6 +171,7 @@ choose() {
             echo "Could not find token at $filepath$chosen/token"
         fi
     fi
+
     # execute the shell with your new values
     if [[ "$dashboard" = true ]]; then 
         echo "Opening dashboard..."
