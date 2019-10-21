@@ -173,9 +173,9 @@ choose() {
         echo "Opening dashboard..."
         open $url
         kubectl proxy
-    else
-        $SHELL -i
     fi
+
+    echo "$filepath$chosen/config" > "$filepath/current"
     exit
 }
 
@@ -223,8 +223,6 @@ AddListing() {
     echo "Added $input_name"
 }
 
-
-# this is the part that actually executes the code!
 case "$mode" in
     add) AddListing ;;
     del) DeleteListing ;;
