@@ -12,7 +12,7 @@ else
     dirs=( $(ls -l $filepath | grep "^d" | awk '{print $9}') )
 fi
 
-url=http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/
+url="http://localhost:<port>/api/v1/namespaces/<namespace>/services/https:kubernetes-dashboard:/proxy/#/"
 
 print_usage() {
 cat << EOF
@@ -58,6 +58,8 @@ mode="sel"
 grab=false
 dashboard=false
 token=false
+port=8001
+namespace="kubernetes-dashboard"
 
 # check flags and args
 for arg in "$@"; do
@@ -68,6 +70,10 @@ for arg in "$@"; do
             "sel") mode="sel" ;;
             "--name") grab="name" ;;
             "-n") grab="name" ;;
+            "--port") grab="port" ;;
+            "-p") grab="port" ;;
+            "--namespace") grab="namespace" ;;
+            "-s") grab="namespace" ;;
             "--token") grab="token" ;;
             "-t") grab="token" ;;
             "tldr") print_tldr ;;
@@ -79,6 +85,8 @@ for arg in "$@"; do
            "file") input_file=$arg ;;
            "name") input_name=$arg ;;
            "token") input_token=$arg ;;
+           "namespace") input_namespace=$arg ;;
+           "port") input_port=$arg ;;
         esac 
         grab=false
     fi
@@ -175,8 +183,9 @@ choose() {
     # execute the shell with your new values
     if [[ "$dashboard" = true ]]; then 
         echo "Opening dashboard..."
-        open $url
-        kubectl proxy
+        openurl=$(echo $url | sed "s/<port>/$input_port/g" | sed "s/<namespace>/$input_namespace/g")
+        open $openurl
+        kubectl proxy -p $input_port
     fi
 
     echo "$filepath$chosen/config" > "$filepath/current"
