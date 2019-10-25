@@ -58,8 +58,8 @@ mode="sel"
 grab=false
 dashboard=false
 token=false
-port=8001
-namespace="kubernetes-dashboard"
+input_port=8001
+input_namespace="kubernetes-dashboard"
 
 # check flags and args
 for arg in "$@"; do
